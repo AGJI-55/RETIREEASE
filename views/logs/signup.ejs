@@ -1,0 +1,99 @@
+ <% layout("./layout/boiler.ejs") %> 
+<style>
+  .login-container {
+            background: rgba(255, 255, 255, 0.8); 
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            width: 40%;
+            /* max-width: 400px; */
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            margin: 0 auto !important;
+            margin-top:5% !important;
+        }
+
+        .login-container:hover {
+            transform: scale(1.05); 
+        }
+
+
+        #lh1 {
+            color: #2F80ED;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: bolder !important;
+        }
+        .form-label {
+            font-size: 14px !important;
+            color: #333 !important;
+        }
+
+        /* Button styling */
+        .btnL {
+            width: 100%;
+            padding: 12px;
+            background-color: #2F80ED;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 2% !important;
+        }
+       #lll{
+        text-align: start;
+       }
+        .btnL:hover {
+            background-color: #56CCF2;
+        }
+
+    @media (max-width: 600px) {
+            .login-container {
+                padding: 20px;
+                width: 90%;
+            }
+            #lh1 {
+                font-size: 28px;
+            }
+        }
+  </style>
+
+
+<div class="login-container m-5">
+  <h1 id="lh1"><b style="color: orange !important;">Register</b> to RetireEase</h1> <br>
+
+  <form action="/signup" method="POST" novalidate class="needs-validation" id="lll">
+
+    <div class="mb-3">
+      <label for="username" class="form-label text-dark">Username:</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+      <div class="invalid-feedback">Username is required!</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+     <div class="mb-3">
+      <label for="email" class="form-label text-dark">Email:</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+      <div class="invalid-feedback">Email should be like xyz@adc.com is </div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label text-dark">Password:</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+      <div class="invalid-feedback">Password is required!</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+    <div class="mb-3">
+      <label for="confirm" class="form-label text-dark">Confirm Password:</label>
+      <input type="password" class="form-control" id="confirm" name="confirm" required>
+      <div class="invalid-feedback">Password is required!</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+<br>
+    <button type="submit" class="btn btnL w-100 text-white py-2 fw-bold">Sign Up</button>
+  </form>
+</div>
+

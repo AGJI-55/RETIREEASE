@@ -1,0 +1,1108 @@
+
+
+<% layout("./layout/boiler.ejs") %>
+
+  <style>
+    .pulse-animation {
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(6px);
+      border-radius: 15px;
+    }
+
+    .file-preview {
+      max-height: 160px;
+      width: 100%;
+      object-fit: contain;
+    }
+  .booking-item {
+    transition: box-shadow 0.2s ease;
+  }
+  .booking-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18); /* soft grey shadow */
+  }
+  .recdis{
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 2% !important;
+  }
+    body {
+      background: #e8f0ff;
+    }
+  </style>
+</head>
+
+<body class="text-dark">
+
+<!-- HERO -->
+<header class="container py-5 d-flex flex-column flex-lg-row align-items-center gap-4">
+  <div class="flex-grow-1">
+    <h1 class="fw-semibold display-6">Health — RetireEase</h1>
+    <p class="text-muted mt-2">
+      Animated exercises, meditation & yoga booking, mood & sleep insights,
+      BMI & calories — everything to help you stay active and mindful.
+    </p>
+
+    <div class="mt-3 d-flex flex-wrap gap-2">
+      <!-- <a href="#exercise" class="btn btn-primary px-4">Explore Exercises</a> -->
+      <a href="#dashboard" class="btn btn-outline-primary px-4">Open Dashboard</a>
+    </div>
+  </div>
+
+  <div class=" col-lg-4">
+    <img src="images/retireeasehealth.png" class="img-fluid rounded shadow" alt="">
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="container pb-5">
+  <div class="row g-4">
+
+    <!-- LEFT: Features -->
+    <div class="col-lg-8">
+
+      <!-- Exercise Cards -->
+      <div class="row g-3">
+        <!-- Gentle Cardio -->
+        <div class="col-sm-6">
+          <div class="border border-2 border-dashed p-4 text-center rounded pulse-animation">
+            <div class="mx-auto rounded-circle overflow-hidden" style="width:100px;height:100px;">
+              <img src="images/cardio.png" class="w-100 h-100 object-fit-cover" />
+            </div>
+            <h5 class="mt-3">Gentle Cardio</h5>
+            <p class="text-muted small">Low-impact sequences with simple animations.</p>
+            <button onclick="openExercise('gentle-cardio')" class="btn btn-primary btn-sm">Play</button>
+          </div>
+        </div>
+
+        <!-- Meditation -->
+        <div class="col-sm-6">
+          <div class="border border-2 p-4 text-center rounded" style="background:#f0fff4;">
+            <div class="mx-auto rounded-circle border border-success-subtle overflow-hidden" style="width:100px;height:100px;">
+              <img src="images/meditation.png" class="w-100 h-100" />
+            </div>
+            <h5 class="mt-3">Meditation</h5>
+            <p class="text-muted small">Breathing exercises & guided meditation.</p>
+            <a class="btn btn-success btn-sm" href="/health/medi">Open Meditation</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking -->
+      <div class="glass shadow p-4 mt-4">
+        <h4 class="fw-semibold">Meditation & Yoga — Book a Session</h4>
+        <p class="text-muted small">Choose your time & guide. Bookings save locally (demo).</p>
+
+        <form id="bookingF" class="row g-3 mt-2" action="/health/booking" method="post">
+          <div class="col-sm-4">
+            <input id="name" name="name" required class="form-control" placeholder="Your name" />
+          </div>
+          <div class="col-sm-4">
+            <input id="datetime" name="datetime" type="datetime-local" required class="form-control" />
+          </div>
+          <div class="col-sm-4">
+            <select id="type" name="type" class="form-select">
+              <option>Gentle Yoga</option>
+              <option>Meditation — Guided</option>
+              <option>Breathwork</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100">Book Session</button>
+          </div>
+        </form>
+
+        <h6 class="mt-4 fw-semibold">Your Bookings</h6>
+        <% if(!currUser)  {%>
+         <div class="text-muted small">No bookings yet.</div>
+        <% } %>  
+  <% if (currUser) { %>
+
+    <% if (bookings.length === 0) { %>
+        <div class="text-muted small">No bookings yet.</div>
+    <% } %>
+
+    <ul class="list-unstyled mt-2">
+        <% bookings.forEach(b => { %>
+
+  <li class=" booking-item  d-flex justify-content-between align-items-center p-2 border rounded mb-2 bg-white">
+
+                <div>
+                    <div class="fw-semibold"><%= b.name %> — <%= b.type %></div>
+                    <div class="small text-muted"><%= new Date(b.datetime).toLocaleString() %></div>
+                </div>
+
+                <form action="/health/booking/<%= b._id %>?_method=DELETE" method="POST">
+                 <button type="submit"  class="btn btn-outline-danger btn-sm mt-2"> Cancel</button>
+              </form>
+
+            </li>
+
+        <% }) %>
+    </ul>
+
+<% } %>
+      </div>
+
+      <!-- Mood & Sleep -->
+      <div class="glass shadow p-4 mt-4">
+        <div class="d-flex justify-content-between">
+          <h4 class="fw-semibold">Mood, Sleep & Weekly Challenges</h4>
+          <span class="text-muted small">Track • Improve • Celebrate</span>
+        </div>
+
+        <div class="row g-3 mt-2">
+          <!-- Mood -->
+          <div class="col-sm-4">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Mood Tracker</h6>
+              <p class="text-muted small">Tap to log mood.</p>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-warning" onclick="logMood('happy')">🙂</button>
+                <button class="btn btn-secondary" onclick="logMood('ok')">😐</button>
+                <button class="btn btn-info" onclick="logMood('sad')">😔</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sleep -->
+          <div class="col-sm-4">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Sleep Insights</h6>
+              <p class="text-muted small">Track sleep & trends.</p>
+
+              <form id="sleepForm" class="row g-2" action="/health/sleep" method="post">
+                <div class="col-6">
+                  <input id="sleepDate" name="sleepDate" type="date" class="form-control" required/>
+                </div>
+                <div class="col-6">
+                  <input id="sleepHours" name="sleepHours" type="number" min="0" max="24" step="0.1" placeholder="Hours" class="form-control" required/>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary w-100 btn-sm">Save</button>
+                </div>
+              </form>
+
+       <div class="mt-3 small">
+                <!-- <div>Last Night: <span id="sleepLast">—</span></div> -->
+         <% if (currUser) { %>          
+          <div>Last Sleep:
+        <% if (sleeps.length) { %>
+          <span><b><%= sleeps[0].hours %> hrs </b>(<%= sleeps[0].sleepDate.toDateString() %>)</span>
+        <% } else { %>
+          <span>—</span>
+        <% } %>
+      </div>
+
+      <% } %>
+       <% if (!currUser) { %>
+<div>Last Sleep: <span>—</span> </div>
+        <% } %>
+
+          <div>7-day Avg: <b><span><%= avg7 %></span></b></div>      
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Challenge -->
+          <div class="col-sm-4">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Weekly Challenge</h6>
+              <p class="text-muted small">Walk 3,000 steps/day</p>
+              <button class="btn btn-success btn-sm" id="joinChallenge">Join</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sleep History -->
+        <div class="border rounded p-3 bg-white mt-3">
+          <h6 class="fw-semibold">Sleep History (last 7)</h6>
+
+          
+     <% if(!currUser)  {%>
+         <div class="text-muted small">No sleep History yet..</div>
+        <% } %>  
+  <% if (currUser) { %>
+
+    <% if (sleeps.length === 0) { %>
+        <div class="text-muted small">No sleep History yet..</div>
+    <% } %>
+
+      <ul id="recordsList" class="list-unstyled mt-2"></ul>
+        <% sleeps.forEach(s => { %>
+   <li class="d-flex justify-content-between small border-bottom py-1">
+          <div><%= s.sleepDate.toDateString() %></div>
+          <div><%= s.hours %> hrs</div>
+        </li>
+
+        <% }) %>
+    </ul>
+
+<% } %>
+
+        </div>
+      </div>
+
+      <!-- Appointments -->
+      <div class="glass shadow p-4 mt-4">
+        <h4 class="fw-semibold">Doctor Appointments & Medication</h4>
+        <p class="text-muted small">Track visits & meds. Stored locally.</p>
+
+        <div class="row g-3 mt-2">
+          <!-- Add Medication -->
+          <div class="col-md-6">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Add Medication</h6>
+
+              <form id="medForm" class="row g-2 mt-1" action="/health/medication" method="post">
+                <div class="col-12">
+                  <input id="medName" name="medName" class="form-control" placeholder="Medicine" required/>
+                </div>
+                <div class="col-12">
+                  <input id="medTime" name="medTime" type="time" class="form-control" required/>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary w-100 btn-sm">Save</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+
+          <!-- Appointments -->
+          <div class="col-md-6">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Upcoming Medication</h6>
+
+               <% if(!currUser)  {%>
+         <div class="text-muted small">No Upcoming medications yet.</div>
+        <% } %>  
+  <% if (currUser) { %>
+
+    <% if (meds.length === 0) { %>
+        <div class="text-muted small">No Upcoming medications yet.</div>
+    <% } %>
+
+      <ul id="recordsList" class="list-unstyled mt-2"></ul>
+        <% meds.forEach(m => { %>
+
+  <li class=" booking-item recdis  justify-content-between  p-2 border rounded mb-2 bg-white">
+
+                 <div>
+          <div class="fw-semibold">
+            <%= m.medicine %>
+          </div>
+          <div class="small text-muted">
+            <%= new Date(m.medTime).toLocaleString() %>
+          </div>   <br>
+
+        </div>
+
+        <!-- RIGHT BUTTONS -->
+        <div class="d-flex gap-2">
+
+          <!-- DELETE BUTTON -->
+          <form action="/health/medication/<%= m._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Cancel</button>
+          </form>
+
+        </div>
+
+            </li>
+
+        <% }) %>
+    </ul>
+
+<% } %>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Records -->
+      <div class="glass shadow p-4 mt-4">
+        <h4 class="fw-semibold">Medical Records</h4>
+        <p class="text-muted small">Upload and store records locally.</p>
+
+        <div class="row g-3 mt-2">
+          <div class="col-md-6">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Add Record</h6>
+
+              <form id="recordForm" class="row g-2 mt-1" action="/health/record" method="post"  enctype="multipart/form-data">
+                <div class="col-12">
+                  <input id="recordTitle" name="recordTitle" class="form-control" placeholder="Title" required/>
+                </div>
+                <div class="col-12">
+                  <input id="recordFile"  name="recordFile" type="file" class="form-control"  required/>
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-primary w-100 btn-sm">Upload</button>
+                </div>
+              </form>
+
+              <button id="addSample" type="submit" class="btn btn-light mt-2 w-100">Add Sample Report</button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="border rounded p-3 bg-white">
+              <h6 class="fw-semibold">Your Records</h6>
+
+ <% if(!currUser)  {%>
+         <div class="text-muted small">No Records yet.</div>
+        <% } %>  
+  <% if (currUser) { %>
+
+    <% if (records.length === 0) { %>
+        <div class="text-muted small">No Records yet.</div>
+    <% } %>
+
+      <ul id="recordsList" class="list-unstyled mt-2"></ul>
+        <% records.forEach(r => { %>
+
+  <li class=" booking-item recdis  justify-content-between  p-2 border rounded mb-2 bg-white">
+
+                 <div>
+          <div class="fw-semibold">
+            <%= r.title %>
+          </div>
+          <div class="small text-muted">
+            <%= new Date(r.uploadedAt).toLocaleString() %>
+          </div>   <br>
+
+        </div>
+
+        <!-- RIGHT BUTTONS -->
+        <div class="d-flex gap-2">
+
+          <!-- VIEW BUTTON -->
+          <a href="/uploads/<%= r.image.filename %>" 
+             target="_blank" 
+             class="btn btn-outline-secondary btn-sm">
+            View
+          </a>
+
+          <!-- DOWNLOAD BUTTON -->
+          <a href="/uploads/<%= r.image.filename %>" 
+             download="<%= r.title %>" 
+             class="btn btn-outline-secondary btn-sm">
+            Download
+          </a>
+
+          <!-- DELETE BUTTON -->
+          <form action="/health/record/<%= r._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+          </form>
+
+        </div>
+
+            </li>
+
+        <% }) %>
+    </ul>
+
+<% } %>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="col-lg-4"  id="dashboard">
+
+      <!-- Dashboard -->
+      <div class="glass shadow p-4">
+        <h5 class="fw-semibold">Personal Dashboard</h5>
+        <div class="small mt-2">
+          <div><strong>Mood:</strong> <span id="dashMood">—</span></div>
+          <div><strong>Sleep Avg:</strong> <span><%= avg7 %></span></div>
+          <div><strong>Weekly Steps:</strong> <span id="dashSteps">18,200</span></div>
+        </div>
+      </div>
+
+      <!-- BMI -->
+      <div class="glass shadow p-4 mt-4">
+        <h5 class="fw-semibold">BMI & Calories</h5>
+        <form id="bmiForm" class="mt-3">
+          <input id="weight" type="number" placeholder="Weight (kg)" class="form-control mb-2" />
+          <input id="height" type="number" placeholder="Height (cm)" class="form-control mb-2" />
+          <button type="submit" class="btn btn-primary w-100">Calculate BMI</button>
+          <div id="bmiResult" class="small mt-2"></div>
+        </form>
+      </div>
+
+      <!-- SOS -->
+      <div class="glass shadow p-4 mt-4">
+        <h5 class="fw-semibold">Emergency & Caregiver</h5>
+        <p class="small text-muted mt-1">Manage emergency contacts.</p>
+
+        <div class="d-flex gap-2 mt-2">
+          <form  action="/health/SOS" method="POST" class="flex-grow-1">
+              <button type="submit" class="btn btn-danger w-100">SOS</button>
+          </form>
+          <!-- <a href="/health/SOSalert" class="btn btn-danger flex-grow-1"> SOS</a> -->
+          <button id="addCare" class="btn btn-outline-secondary flex-grow-1">Add Caregiver</button>
+        </div>
+      </div>
+
+ <div class="glass shadow p-4 mt-4">
+  <div class="border rounded p-3 bg-white">
+    <h6 class="fw-semibold">Your Caregivers</h6>
+
+    <% if(!currUser) { %>
+        <div class="text-muted small">No caregivers yet.</div>
+    <% } %>
+
+    <% if(currUser) { %>
+
+      <% if(caregivers.length === 0) { %>
+        <div class="text-muted small">No caregivers yet.</div>
+      <% } %>
+
+      <ul class="list-unstyled mt-2">
+        <% caregivers.forEach(c => { %>
+
+          <li class="booking-item recdis justify-content-between p-2 border rounded mb-2 bg-white d-flex">
+            
+            <!-- LEFT SIDE -->
+            <div>
+              <div class="fw-semibold"><%= c.name %></div>
+              <div class="small text-muted">
+                <%= c.relation %> •
+              </div>
+            </div>
+
+            <!-- RIGHT SIDE BUTTONS -->
+            <div class="d-flex gap-2">
+
+              <!-- DELETE BUTTON -->
+              <form action="/health/addCare/<%= c._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Remove</button>
+              </form>
+
+            </div>
+
+          </li>
+
+        <% }) %>
+      </ul>
+
+    <% } %>
+
+  </div>
+</div>
+
+
+    </div>
+
+  </div>
+</main>
+
+<!-- Exercise Modal -->
+<div class="modal fade" id="exerciseModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content p-3">
+
+      <div class="modal-header">
+        <h5 id="exerciseTitle" class="modal-title fw-semibold">Exercise</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-7">
+            <img id="exerciseImage" src="images/excercise.png" class="file-preview rounded">
+          </div>
+
+          <div class="col-md-5">
+
+            <label class="small text-muted">Duration</label>
+            <select id="exerciseDuration" class="form-select mb-3">
+              <option value="60">1:00</option>
+              <option value="120" selected>2:00</option>
+              <option value="300">5:00</option>
+            </select>
+
+            <label class="small text-muted">Timer</label>
+            <h3 id="exerciseTimer" class="fw-bold">02:00</h3>
+
+            <div class="progress mb-3">
+              <div id="exerciseProgress" class="progress-bar bg-primary" style="width:0%"></div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button id="startExercise" class="btn btn-success flex-fill">Start</button>
+              <button id="pauseExercise" class="btn btn-outline-secondary">Pause</button>
+              <button id="stopExercise" class="btn btn-outline-danger">Stop</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add Caregiver Modal -->
+<div class="modal fade" id="careModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Add Caregiver</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="careForm" action="/health/addCare" method="post">
+          <div class="mb-3">
+            <label class="form-label">Caregiver Name</label>
+            <input type="text" name="name" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phone" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Relationship</label>
+            <input type="text" name="relation" class="form-control" placeholder="Son, Daughter, Friend…" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Save</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+
+<script>
+(function(){
+  // Defensive DOM-ready helper
+  function ready(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+
+  ready(function(){
+    try {
+      console.debug('[re] init start');
+
+      const STORAGE_KEYS = { appts: 're_appts_v1', meds: 're_meds_v1', bookings: 're_bookings_v1', mood: 're_mood_v1', sleep: 're_sleep_v1', records: 're_records_v1' };
+
+      // Safe storage helpers
+      function saveToStorage(key, value){ try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){ console.error('[re] save err', e); } }
+      function loadFromStorage(key){ try { return JSON.parse(localStorage.getItem(key)) || []; } catch(e){ return []; } }
+
+      // Small utility
+      function genId(){ return Math.random().toString(36).slice(2,9); }
+      function fmtDateTime(dt){ try { return new Date(dt).toLocaleString(); } catch(e) { return String(dt); } }
+      function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+      function shortDate(d){ try { return new Date(d).toLocaleDateString(); } catch(e){ return d; } }
+
+      // Normalize buttons to avoid accidental full-form submits
+   (function normalizeButtons(){
+  document.querySelectorAll('form button').forEach(btn=>{
+    // DO NOT change submit buttons
+    if (btn.textContent.trim().toLowerCase().includes("book")) return;
+    if (btn.textContent.trim().toLowerCase().includes("save")) return;
+    if (btn.textContent.trim().toLowerCase().includes("upload")) return;
+    if (btn.getAttribute("type") === "submit") return;
+
+    // Only fix random buttons having no type
+    if (!btn.hasAttribute('type')) {
+      btn.setAttribute('type','button');
+    }
+  });
+})();
+
+      // ---------- Generic DOM helpers ----------
+      function ifExists(id, fn){ const el = document.getElementById(id); if(el) try { fn(el); } catch(e){ console.error(`[re] handler for ${id} failed`, e); } }
+      function setTextIfExists(id, text){ const el = document.getElementById(id); if(el) el.textContent = text; }
+      function controlBtn(text, classes, cb){ const b = document.createElement('button'); b.className = 'btn btn-sm ' + (classes||'btn-outline-secondary') ; b.textContent = text; b.addEventListener('click', cb); b.style.marginLeft = '6px'; return b; }
+
+      // ---------- Appointments ----------
+      function renderAppointments(){
+        try {
+          const list = document.getElementById('apptList'); if(!list) return;
+          const appts = loadFromStorage(STORAGE_KEYS.appts) || [];
+          list.innerHTML = '';
+          if (!appts.length){ list.innerHTML = '<div class="text-muted small">No appointments scheduled.</div>'; return; }
+          appts.sort((a,b)=> new Date(a.datetime)-new Date(b.datetime));
+          appts.forEach(a=>{
+            const li = document.createElement('li');
+            li.className = 'd-flex justify-content-between align-items-start mb-2';
+            li.innerHTML = `<div><div class="fw-semibold">${escapeHtml(a.doctor)}</div><div class="small text-muted">${fmtDateTime(a.datetime)}</div></div>`;
+            const del = document.createElement('button'); del.className='btn btn-outline-secondary btn-sm'; del.textContent='Delete';
+            del.addEventListener('click', ()=> { removeAppt(a.id); });
+            li.appendChild(del);
+            list.appendChild(li);
+          });
+        } catch(e){ console.error('[re] renderAppointments', e); }
+      }
+      function addAppt(doctor, datetime){ const arr = loadFromStorage(STORAGE_KEYS.appts); arr.push({id:genId(), doctor, datetime}); saveToStorage(STORAGE_KEYS.appts, arr); renderAppointments(); }
+      function removeAppt(id){ const arr = loadFromStorage(STORAGE_KEYS.appts).filter(x=>x.id!==id); saveToStorage(STORAGE_KEYS.appts, arr); renderAppointments(); }
+
+      // ---------- Bookings ----------
+      // function renderBookings(){
+      //   try {
+      //     const list = document.getElementById('appointmentsList'); if(!list) return;
+      //     const b = loadFromStorage(STORAGE_KEYS.bookings) || [];
+      //     list.innerHTML = '';
+      //     if (!b.length){ list.innerHTML = '<div class="text-muted small">No bookings yet.</div>'; return; }
+      //     b.sort((x,y)=> new Date(x.datetime)-new Date(y.datetime));
+      //     b.forEach(item=>{
+      //       const li = document.createElement('li'); li.className='d-flex justify-content-between align-items-center p-2 border rounded mb-2 bg-white';
+      //       li.innerHTML = `<div><div class="fw-semibold">${escapeHtml(item.name)} — ${escapeHtml(item.type)}</div><div class="small text-muted">${fmtDateTime(item.datetime)}</div></div>`;
+      //       const btn = document.createElement('button'); btn.className='btn btn-outline-secondary btn-sm'; btn.textContent='Cancel';
+      //       btn.addEventListener('click', ()=> { removeBooking(item.id); });
+      //       li.appendChild(btn); list.appendChild(li);
+      //     });
+      //   } catch(e){ console.error('[re] renderBookings', e); }
+      // }
+      // function addBooking(name,type,datetime){ const arr = loadFromStorage(STORAGE_KEYS.bookings); arr.push({id:genId(), name, type, datetime}); saveToStorage(STORAGE_KEYS.bookings, arr); renderBookings(); }
+      // function removeBooking(id){ const arr = loadFromStorage(STORAGE_KEYS.bookings).filter(x=>x.id!==id); saveToStorage(STORAGE_KEYS.bookings, arr); renderBookings(); }
+
+      // ---------- Sleep ----------
+      // function renderSleep(){
+      //   try {
+      //     const list = document.getElementById('sleepList'); if(!list) return;
+      //     const rows = (loadFromStorage(STORAGE_KEYS.sleep)||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+      //     list.innerHTML = '';
+      //     if (!rows.length){ list.innerHTML = '<div class="text-muted small">No sleep entries yet.</div>'; setTextIfExists('sleepLast','—'); setTextIfExists('sleepAvg','—'); return; }
+      //     rows.slice(0,14).forEach(r=>{
+      //       const li = document.createElement('li'); li.className='d-flex justify-content-between small';
+      //       li.innerHTML = `<div>${shortDate(r.date)}</div><div>${r.hours} hrs</div>`;
+      //       list.appendChild(li);
+      //     });
+      //     setTextIfExists('sleepLast', `${rows[0].hours} hrs (${shortDate(rows[0].date)})`);
+      //     const avg = get7DayAverage(rows);
+      //     setTextIfExists('sleepAvg', avg === '—' ? '—' : (avg + ' hrs'));
+      //     setTextIfExists('dashSleep', avg === '—' ? '—' : (avg + ' hrs'));
+      //   } catch(e){ console.error('[re] renderSleep', e); }
+      // }
+      // function addSleepEntry(date,hours){ const rows = loadFromStorage(STORAGE_KEYS.sleep); rows.push({id:genId(), date, hours: parseFloat(hours)}); saveToStorage(STORAGE_KEYS.sleep, rows); renderSleep(); }
+      // function get7DayAverage(rows){
+      //   try {
+      //     if(!rows || !rows.length) return '—';
+      //     const now = new Date(); const map = {};
+      //     rows.forEach(r=> { map[r.date] = (map[r.date] || 0) + r.hours; });
+      //     let sum=0,count=0;
+      //     for(let i=0;i<7;i++){ const d=new Date(); d.setDate(now.getDate()-i); const key = d.toISOString().slice(0,10); if(map[key]!==undefined){ sum+=map[key]; count++; } }
+      //     if(count===0) return '—';
+      //     return (sum/count).toFixed(1);
+      //   } catch(e){ console.error('[re] get7DayAverage', e); return '—'; }
+      // }
+
+      // ---------- Records ----------
+      // function renderRecords(){
+      //   try {
+      //     const list = document.getElementById('recordsList'); if(!list) return;
+      //     const rows = (loadFromStorage(STORAGE_KEYS.records)||[]).slice().sort((a,b)=> new Date(b.uploadedAt)-new Date(a.uploadedAt));
+      //     list.innerHTML = '';
+      //     if(!rows.length){ list.innerHTML='<div class="text-muted small">No records uploaded.</div>'; return; }
+      //     rows.forEach(r=>{
+      //       const li = document.createElement('li'); li.className='d-flex justify-content-between align-items-center p-2 border rounded mb-2 bg-white';
+      //       li.innerHTML = `<div><div class="fw-semibold">${escapeHtml(r.title)}</div><div class="small text-muted">${new Date(r.uploadedAt).toLocaleString()} • ${escapeHtml(r.type)}</div></div>`;
+      //       const controls = document.createElement('div');
+      //       const view = controlBtn('View','btn-outline-secondary', ()=> openRecord(r.id));
+      //       const dl = controlBtn('Download','btn-outline-secondary', ()=> downloadRecord(r.id));
+      //       const del = controlBtn('Delete','btn-outline-danger', ()=> removeRecord(r.id));
+      //       controls.appendChild(view); controls.appendChild(dl); controls.appendChild(del);
+      //       li.appendChild(controls);
+      //       list.appendChild(li);
+      //     });
+      //   } catch(e){ console.error('[re] renderRecords', e); }
+      // }
+      // function addRecordFromData(title,type,url){ const rows = loadFromStorage(STORAGE_KEYS.records); rows.push({id:genId(), title: title||'Untitled', type: type||'unknown', url, uploadedAt: new Date().toISOString()}); saveToStorage(STORAGE_KEYS.records, rows); renderRecords(); }
+      // function removeRecord(id){ const rows = loadFromStorage(STORAGE_KEYS.records).filter(r=>r.id!==id); saveToStorage(STORAGE_KEYS.records, rows); renderRecords(); }
+      // function downloadRecord(id){ try { const rows = loadFromStorage(STORAGE_KEYS.records); const r = rows.find(x=>x.id===id); if(!r) return alert('Record not found'); const a=document.createElement('a'); a.href=r.url; a.download = r.title||'record'; document.body.appendChild(a); a.click(); a.remove(); } catch(e){ console.error('[re] downloadRecord', e); } }
+
+      function openRecord(id){
+        try {
+          const rows = loadFromStorage(STORAGE_KEYS.records); const r = rows.find(x=>x.id===id); if(!r) return alert('Record not found');
+          const modal = document.getElementById('recordModal');
+          if(!modal){
+            // fallback simple viewer
+            const fallback = document.createElement('div'); fallback.className='fixed inset-0 d-flex align-items-center justify-content-center';
+            fallback.style.position='fixed'; fallback.style.left=0; fallback.style.top=0; fallback.style.right=0; fallback.style.bottom=0;
+            fallback.style.background = 'rgba(0,0,0,0.5)';
+            fallback.style.zIndex = 9999;
+            fallback.innerHTML = `<div class="bg-white rounded p-3" style="max-width:900px;width:100%"><div class="d-flex justify-content-between align-items-center"><h5>${escapeHtml(r.title)}</h5><button class="btn btn-outline-secondary btn-sm">Close</button></div><div id="re_fallback_body" class="mt-3"></div></div>`;
+            document.body.appendChild(fallback);
+            fallback.querySelector('button').addEventListener('click', ()=> fallback.remove());
+            const body = document.getElementById('re_fallback_body');
+            populateRecordBody(body, r);
+            return;
+          }
+          // use provided modal markup (if user has it)
+          const titleEl = modal.querySelector('#modalTitle'); const bodyEl = modal.querySelector('#modalBody');
+          if(titleEl) titleEl.textContent = r.title;
+          if(bodyEl){ bodyEl.innerHTML=''; populateRecordBody(bodyEl, r); }
+          // Show modal using Bootstrap if available, else fallback to simple show
+          if(window.bootstrap && bootstrap.Modal){
+            try {
+              let inst = bootstrap.Modal.getInstance(modal);
+              if(!inst) inst = new bootstrap.Modal(modal, {});
+              inst.show();
+            } catch(err){
+              modal.classList.add('show'); modal.style.display = 'block';
+            }
+          } else {
+            modal.classList.add('show'); modal.style.display = 'block';
+          }
+        } catch(e){ console.error('[re] openRecord', e); }
+      }
+      function populateRecordBody(container, r){
+        try {
+          if(r.type && r.type.startsWith('image')){ const img = document.createElement('img'); img.src = r.url; img.className='img-fluid file-preview'; container.appendChild(img); }
+          else if(r.type === 'application/pdf' || (r.url && r.url.toLowerCase().endsWith('.pdf'))){ const iframe = document.createElement('iframe'); iframe.src = r.url; iframe.style.width='100%'; iframe.style.height='600px'; container.appendChild(iframe); }
+          else if(r.type && (r.type.startsWith('text') || r.type==='text/plain')){ fetch(r.url).then(res=>res.text()).then(t=> { const pre = document.createElement('pre'); pre.className='small'; pre.textContent = t; container.appendChild(pre); }).catch(()=>{ const p = document.createElement('div'); p.textContent='Unable to load text file.'; container.appendChild(p); }); }
+          else { const a = document.createElement('a'); a.href = r.url; a.textContent = 'Open file'; a.target = '_blank'; a.className='link-primary'; container.appendChild(a); }
+        } catch(e){ console.error('[re] populateRecordBody', e); }
+      }
+
+      // ---------- Exercise modal + timer ----------
+      let exercise = { timer: null, total: 0, remaining: 0, running: false, bsInstance: null };
+      function fmtTime(sec){ const m = Math.floor(sec/60).toString().padStart(2,'0'); const s = Math.floor(sec%60).toString().padStart(2,'0'); return `${m}:${s}`; }
+
+      function openExercise(id) {
+        try {
+          const title = id === 'gentle-cardio' ? 'Gentle Cardio — Low-impact' : 'Exercise';
+          const titleEl = document.getElementById('exerciseTitle');
+          if(titleEl) titleEl.innerText = title;
+
+          // set image (use images/ path consistent with HTML)
+          const imgEl = document.getElementById('exerciseImage');
+          if(imgEl) imgEl.src = 'images/excercise.png';
+
+          // default duration is whatever select has
+          const durSel = document.getElementById('exerciseDuration');
+          const dur = parseInt(durSel && durSel.value, 10) || 120;
+          exercise.total = dur;
+          exercise.remaining = dur;
+          updateExerciseUI();
+
+          const modal = document.getElementById('exerciseModal');
+          if(!modal) return;
+          // show modal using bootstrap if available, else fallback
+          if(window.bootstrap && bootstrap.Modal){
+            try {
+              if(!exercise.bsInstance) exercise.bsInstance = new bootstrap.Modal(modal);
+              exercise.bsInstance.show();
+            } catch(err){
+              modal.classList.add('show'); modal.style.display = 'block';
+            }
+          } else {
+            modal.classList.add('show'); modal.style.display = 'block';
+          }
+        } catch(e){ console.error('[re] openExercise', e); }
+      }
+
+      window.openExercise = openExercise;
+
+      function closeExercise(){ try { stopExercise(); const modalEl = document.getElementById('exerciseModal'); if(modalEl){ if(exercise.bsInstance && exercise.bsInstance.hide) try{ exercise.bsInstance.hide(); }catch(_){} modalEl.classList.remove('show'); modalEl.style.display = 'none'; } } catch(e){ console.error('[re] closeExercise', e); } }
+
+      function startExercise(){ if(exercise.running) return; exercise.running = true; exercise.timer = setInterval(()=>{ try { if(exercise.remaining<=0){ stopExercise(); alert('Nice! Session complete 🎉'); return; } exercise.remaining -= 1; updateExerciseUI(); } catch(e){ console.error('[re] exercise tick', e); } },1000); }
+      function pauseExercise(){ if(!exercise.running) return; exercise.running=false; clearInterval(exercise.timer); exercise.timer=null; }
+      function stopExercise(){ clearInterval(exercise.timer); exercise.timer=null; exercise.running=false; exercise.remaining = exercise.total || 0; updateExerciseUI(); }
+      function updateExerciseUI(){ setTextIfExists('exerciseTimer', fmtTime(exercise.remaining)); const prog = document.getElementById('exerciseProgress'); if(prog) prog.style.width = (exercise.total ? ((exercise.total - exercise.remaining)/exercise.total)*100 : 0) + '%'; }
+
+      // Attach exercise control buttons if present
+      ifExists('startExercise', el=> el.addEventListener('click', startExercise));
+      ifExists('pauseExercise', el=> el.addEventListener('click', pauseExercise));
+      ifExists('stopExercise', el=> el.addEventListener('click', stopExercise));
+      ifExists('exerciseDuration', el=> el.addEventListener('change', (e)=>{ exercise.total = parseInt(e.target.value,10)||exercise.total; exercise.remaining = exercise.total; updateExerciseUI(); }));
+
+      // backdrop click fallback (close when user clicks the backdrop area)
+      ifExists('exerciseModal', el => el.addEventListener('click', (ev) => { if(ev.target === el) closeExercise(); }));
+
+      // ---------- Form handlers (attach robustly) ----------
+  
+      // Med form
+      // ifExists('medForm', form => {
+      //   form.addEventListener('submit', function(e){
+      //     e.preventDefault();
+      //     const med = (document.getElementById('medName')||{}).value || '';
+      //     const time = (document.getElementById('medTime')||{}).value || '';
+      //     if(!med || !time) return alert('Please enter medicine and time');
+      //     const meds = loadFromStorage(STORAGE_KEYS.meds); meds.push({id:genId(), med: med.trim(), time}); saveToStorage(STORAGE_KEYS.meds, meds);
+      //     try{ form.reset(); }catch(e){}
+      //     renderMeds();
+      //     alert('Medication reminder saved (demo)');
+      //   });
+      // });
+
+      // Sleep form
+      // ifExists('sleepForm', form => {
+      //   form.addEventListener('submit', function(e){
+      //     e.preventDefault();
+      //     const date = (document.getElementById('sleepDate')||{}).value || new Date().toISOString().slice(0,10);
+      //     const hours = (document.getElementById('sleepHours')||{}).value || '';
+      //     if(!hours) return alert('Please enter hours slept');
+      //     addSleepEntry(date, hours);
+      //     try{ form.reset(); }catch(e){}
+      //   });
+      // });
+
+      // Record form (FileReader robust)
+      // ifExists('recordForm', form => {
+      //   form.addEventListener('submit', function(e){
+      //     e.preventDefault();
+      //     const title = ((document.getElementById('recordTitle')||{}).value || 'Untitled').trim();
+      //     const fileInput = document.getElementById('recordFile'); if(!fileInput || !fileInput.files || !fileInput.files.length) return alert('Please select a file');
+      //     const file = fileInput.files[0];
+      //     try {
+      //       if(file.type && file.type.startsWith('text')) {
+      //         const reader = new FileReader();
+      //         reader.onload = function(evt){
+      //           try {
+      //             const text = evt.target.result;
+      //             const blob = new Blob([text], {type: 'text/plain'});
+      //             const url = URL.createObjectURL(blob);
+      //             addRecordFromData(title, 'text/plain', url);
+      //             try{ form.reset(); }catch(e){}
+      //             alert('Text record saved (demo).');
+      //           } catch(err){ console.error('[re] record text onload', err); alert('Unable to save file'); }
+      //         };
+      //         reader.readAsText(file);
+      //       } else {
+      //         const reader = new FileReader();
+      //         reader.onload = function(evt){
+      //           try {
+      //             const dataUrl = evt.target.result;
+      //             addRecordFromData(title, file.type || (file.name.split('.').pop()), dataUrl);
+      //             try{ form.reset(); }catch(e){}
+      //             alert('Record uploaded (saved locally).');
+      //           } catch(err){ console.error('[re] record binary onload', err); alert('Unable to save file'); }
+      //         };
+      //         reader.readAsDataURL(file);
+      //       }
+      //     } catch(err){ console.error('[re] recordForm handler', err); alert('Failed to read file'); }
+      //   });
+      // });
+
+      // Add sample button
+      ifExists('addSample', btn => btn.addEventListener('click', function(){ try { const SAMPLE_PATH = '/mnt/data/55e2b376-183b-48cb-aaf9-a1ce2529ba40.png'; addRecordFromData('Sample Blood Report', 'image/png', SAMPLE_PATH); alert('Sample added'); } catch(e){ console.error('[re] addSample', e); } }));
+
+// BMI Calculator
+ifExists('bmiForm', form => {
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+
+    if(!weight || !height){
+      setTextIfExists('bmiResult', 'Enter valid weight & height');
+      return;
+    }
+
+    const bmi = weight / ((height/100) ** 2);
+    let status = '';
+
+    if(bmi < 18.5) status = 'Underweight';
+    else if(bmi < 25) status = 'Normal';
+    else if(bmi < 30) status = 'Overweight';
+    else status = 'Obese';
+
+    setTextIfExists('bmiResult', `BMI: ${bmi.toFixed(1)} (${status})`);
+  });
+});
+
+
+      // ---------- Render helpers continued ----------
+      function renderMeds(){
+        try {
+          const list = document.getElementById('medsList'); if(!list) return;
+          const meds = loadFromStorage(STORAGE_KEYS.meds) || [];
+          list.innerHTML = '';
+          if(!meds.length){ list.innerHTML = '<div class="text-muted small">No medication reminders.</div>'; return; }
+          meds.forEach(m=>{
+            const row = document.createElement('div'); row.className='d-flex justify-content-between align-items-center small mb-1';
+            row.innerHTML = `<div>${escapeHtml(m.med)} — ${escapeHtml(m.time)}</div>`;
+            const del = document.createElement('button'); del.className='btn btn-outline-danger btn-sm'; del.textContent='Delete';
+            del.addEventListener('click', ()=>{ const filtered = loadFromStorage(STORAGE_KEYS.meds).filter(x=>x.id!==m.id); saveToStorage(STORAGE_KEYS.meds, filtered); renderMeds(); });
+            row.appendChild(del);
+            list.appendChild(row);
+          });
+        } catch(e){ console.error('[re] renderMeds', e); }
+      }
+
+      // Mood & SOS
+      window.logMood = function(m){ localStorage.setItem(STORAGE_KEYS.mood, m); setTextIfExists('dashMood', m); alert('Mood logged: '+m); }
+      ifExists('sosBtn', b => b.addEventListener('click', ()=> alert('SOS triggered — demo.')) );
+      // ifExists('addCare', b => b.addEventListener('click', ()=> alert('Caregiver mode enabled — demo.')) );
+
+ const addCareBtn = document.getElementById("addCare");
+  const careModal = new bootstrap.Modal(document.getElementById("careModal"));
+
+  addCareBtn.addEventListener("click", () => {
+    careModal.show();
+  });
+
+
+
+      // ---------- Initialization ----------
+      // Seed appointment if empty
+      if(!localStorage.getItem(STORAGE_KEYS.appts)) saveToStorage(STORAGE_KEYS.appts, [{id:genId(), doctor:'Dr. Mehta — Cardiology', datetime:'2026-06-12T10:30'}]);
+
+      function init(){
+        renderAppointments();
+        renderBookings();
+        renderMeds();
+        renderSleep();
+        renderRecords();
+        const mood = localStorage.getItem(STORAGE_KEYS.mood) || '—';
+        setTextIfExists('dashMood', mood);
+        console.debug('[re] init done');
+      }
+      init();
+
+
+      // BOOKING (Meditation & Yoga)
+ifExists('bookingForm', (form) => {
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('bName').value.trim();
+    const datetime = document.getElementById('bDatetime').value;
+    const type = document.getElementById('bType').value;
+
+    if(!name || !datetime){
+      alert("Please enter your name and choose date/time.");
+      return;
+    }
+
+    // load existing bookings
+    let bookings = loadFromStorage(STORAGE_KEYS.bookings);
+
+    // create booking object
+    let entry = {
+      id: genId(),
+      name,
+      datetime,
+      type
+    };
+
+    bookings.push(entry);
+
+    // save into localStorage
+    saveToStorage(STORAGE_KEYS.bookings, bookings);
+
+    // re-render list
+    renderBookings();
+
+    form.reset();
+    alert("Session booked successfully!");
+  });
+
+});
+
+
+// Render booking list
+function renderBookings() {
+  const list = document.getElementById('appointmentsList');
+  if(!list) return;
+
+  const bookings = loadFromStorage(STORAGE_KEYS.bookings);
+
+  list.innerHTML = "";
+
+  if(bookings.length === 0){
+    list.innerHTML = `<div class="text-muted small">No bookings yet.</div>`;
+    return;
+  }
+
+  bookings.sort((a,b) => new Date(a.datetime) - new Date(b.datetime));
+
+  bookings.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "d-flex justify-content-between align-items-center p-2 border rounded mb-2 bg-white";
+
+    li.innerHTML = `
+      <div>
+        <div class="fw-semibold">${escapeHtml(item.name)} — ${escapeHtml(item.type)}</div>
+        <div class="small text-muted">${fmtDateTime(item.datetime)}</div>
+      </div>
+    `;
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = "btn btn-outline-secondary btn-sm";
+    cancelBtn.innerText = "Cancel";
+    cancelBtn.onclick = () => {
+      removeBooking(item.id);
+    };
+
+    li.appendChild(cancelBtn);
+    list.appendChild(li);
+  });
+}
+
+
+// Delete booking
+function removeBooking(id){
+  let bookings = loadFromStorage(STORAGE_KEYS.bookings);
+  bookings = bookings.filter(b => b.id !== id);
+  saveToStorage(STORAGE_KEYS.bookings, bookings);
+  renderBookings();
+}
+
+
+      // small DOM helpers exposed for debugging / dev
+      window.re_debug = function(){
+        try {
+          const out = {
+            localStorageKeys: Object.keys(localStorage),
+            appts: loadFromStorage(STORAGE_KEYS.appts),
+            bookings: loadFromStorage(STORAGE_KEYS.bookings),
+            meds: loadFromStorage(STORAGE_KEYS.meds),
+            sleep: loadFromStorage(STORAGE_KEYS.sleep),
+            records: loadFromStorage(STORAGE_KEYS.records),
+            mood: localStorage.getItem(STORAGE_KEYS.mood)
+          };
+          console.log('[re_debug]', out);
+          return out;
+        } catch(e){ console.error('[re_debug] err', e); return null; }
+      };
+
+      // small helpers exposed
+      window.re_addBooking = addBooking;
+      window.re_addAppt = addAppt;
+      window.re_addSample = function(){ addRecordFromData('Sample Blood Report','image/png','/mnt/data/55e2b376-183b-48cb-aaf9-a1ce2529ba40.png'); };
+
+    } catch(err){
+      console.error('[re] initialization failed', err);
+    }
+  }); // ready
+})();
+</script>
+
+
+</body>
+

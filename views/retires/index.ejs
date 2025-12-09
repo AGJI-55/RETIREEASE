@@ -1,0 +1,215 @@
+
+<% layout("./layout/boiler.ejs") %>
+
+<style>
+  .spotify-card {
+  background: #f4f4f4;                 /* Light gray Spotify card */
+  border-radius: 18px;                 /* Big rounded corners */
+  border: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spotify-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+.spotify-card img {
+  object-fit: cover;
+}
+
+.blog-card {
+    border: none;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  }
+  .blog-card img {
+    height: 350px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .blog-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+  .blog-footer {
+    color: #ddd;
+    font-size: 0.85rem;
+  }
+  /* Add dark gradient overlay like Spotify */
+  .card-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  }
+  .card-wrapper {
+    position: relative;
+  }
+</style>
+
+
+<body>
+
+  <section class="hero">
+    
+    <h2>Your Retirement Resource Center</h2>
+    <p>Empowering you to plan smart, live healthy, and stay connected — all in one place.</p>
+    <a href="#features">Explore Resources</a>
+    <a href="/community">Join the Community</a>
+  </section>
+
+
+  <section id="features">
+    <h3 class="section-title">Explore Key Sections</h3>
+<br>
+    <div class="cards">
+       <a href="/health">
+      <div class="card cardh">
+       
+        <h4>Health</h4>
+        <p>Stay healthy with exercise visuals, yoga/meditation sessions, doctor booking, and easy wellness tracking.</p>
+      </div>
+    </a>
+      <a href="/finance"><div class="card cardh">
+        <h4>Finance</h4>
+        <p>Track budgets, plan investments, and use smart tools to manage your savings with confidence..</p>
+      </div>
+    </a>
+      <a href="/community"><div class="card cardh">
+        <h4>Community</h4>
+        <p>Connect through forums, interest groups, and meaningful conversations with fellow retirees.</p>
+      </div>
+      </a>
+      <a href="/blogs">
+      <div class="card cardh">
+        <h4>
+          Create and Share Your stories
+        </h4>
+        <p>Share stories and climb the leaderboard as your posts earn likes, views, and recognition.</p>
+      </div>
+    </a>
+
+    </div>
+    <div class="cards" id="blogContainer"></div>
+
+  </section>
+   <section id="blogs
+   ">
+   
+    <h3 class="section-title">Community Blogs</h3>
+
+    <div class="cards" id="blogContainer"></div>
+
+    <div class="leaderboard1">
+      <h4>🏆 Top Bloggers</h4> <br>
+        <hr>
+     <div class="row g-4">
+ <% if (blogs && blogs.length) { %>
+     <% blogs.forEach(b => { %>
+       <a href="/community/bl/<%= b._id %>" class="col-md-4 ">
+     <div >
+      <div class="blog-card">
+        <div class="card-wrapper">
+          <img src="/Posts/<%= b.image.filename %>" alt="">
+          <div class="card-overlay">
+            <div class="blog-title"> <%= b.title %> </div>
+            <div class="blog-footer">  Posted: <%= timeAgo(b.createdAt) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+    <% }); %>
+    <% } %>
+</div>
+
+<%
+  function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now - past;
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+
+    if (seconds < 60) return "just now";
+    if (minutes < 60) return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    if (hours < 24) return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    if (days < 7) return days + " day" + (days > 1 ? "s" : "") + " ago";
+    return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+  }
+%>
+    </div>
+  </section>
+    
+ </body>
+
+  <!-- <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // menuToggle.addEventListener('click', () => {
+    //   sidebar.classList.add('active');
+    // });
+
+    // closeBtn.addEventListener('click', () => {
+    //   sidebar.classList.remove('active');
+    // });
+     async function fetchLeaderboard() {
+      try {
+        const res = await fetch('/api/leaderboard');
+        const data = await res.json();
+        const leaderboardList = document.getElementById('leaderboardList');
+        leaderboardList.innerHTML = '';
+        data.forEach(user => {
+          const li = document.createElement('li');
+          li.textContent = `${user.username} — ${user.likes} Likes, ${user.reach} Reach`;
+          leaderboardList.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+      }
+    }
+
+    setInterval(fetchLeaderboard, 86400000);
+
+    document.getElementById('blogForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('blogTitle').value;
+      const content = document.getElementById('blogContent').value;
+      const blogContainer = document.getElementById('blogContainer');
+
+      const blogCard = document.createElement('div');
+      blogCard.classList.add('card');
+      blogCard.innerHTML = `<h4>${title}</h4><p>${content}</p>`;
+      blogContainer.prepend(blogCard);
+
+      try {
+        await fetch('/api/blogs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content })
+        });
+        document.getElementById('blogForm').reset();
+      } catch (err) {
+        console.error('Error posting blog:', err);
+      }
+    });
+
+    fetchLeaderboard();
+</script> -->
+ <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+ <script src="/js/script.js"></script> -->

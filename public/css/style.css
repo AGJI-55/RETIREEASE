@@ -1,0 +1,376 @@
+    :root {
+      --primary:#253B80;
+      --primary-dark:253B80 ;
+      --complementary: #EDB82F;
+      --text-dark: #4F4F4F;
+      --bg-light: #F5F7FA;
+      --footer-bg: #1E3A8A;
+      --white: #FFFFFF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif !important;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+    
+   
+    .navbar-nav {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .nav-link {
+      text-decoration: none !important;
+      color: var(--text-dark) !important;
+      font-weight: 500 !important;
+      transition: color 0.3s !important;
+      font-size: 0.95rem !important;
+    }
+
+    .nav-link:hover {
+      color: var(--primary) !important;
+    }
+
+    .btn-login {
+      border: 2px solid var(--primary) !important;
+      color: var(--primary) !important;
+      transition: 0.3s !important;
+    }
+
+    .btn-login:hover {
+      background-color: var(--primary) !important;
+      color: var(--white) !important;
+    }
+
+    .btn-signup {
+      background-color: var(--primary) !important;
+      color: var(--white) !important;
+    }
+
+    .btn-signup:hover {
+      background-color: var(--white) !important;
+      color: var(--primary) !important;
+      border: 2px solid var(--primary) !important;
+    }
+
+  
+
+
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('/images/pexels-mart-production-7329701.jpg') no-repeat center center/cover;
+      color: var(--white);
+      text-align: center;
+      padding: 120px 20px;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      margin-bottom: 25px;
+      /* max-width: 600px; */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero a {
+      background-color: var(--primary) ;
+      padding: 10px 24px ;
+      border-radius: 25px ;
+      color: var(--white) ;
+      text-decoration: none ;
+      margin: 8px ;
+      font-size: 0.95rem ;
+      transition: 0.3s ;
+      display: inline-block ;
+    }
+
+    .hero a:hover {
+      background-color: transparent ;
+    }
+
+    .section-banner1 {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .section-banner1 img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    section {
+      padding: 60px 30px;
+      text-align: center;
+    }
+
+    h3.section-title1 {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+      gap: 20px  !important;
+      width: 100% !important;
+      padding: 0 10px !important;
+    }
+
+    .card{
+      background: var(--white) !important;
+      border-radius: 10px !important;
+      padding: 25px !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) ;
+      transition: 0.3s !important;
+      border-top: 4px solid var(--primary) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+    }
+  .cardh{
+      max-height: 180px !important; /* Instead of fixed height */
+  }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15) ;
+      border-top: 4px solid var(--complementary) !important ;
+    }
+    
+.card p{
+  flex-grow: 1 !important;            /* Makes text area flexible */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; /* Adds "..." if text too long */
+}
+
+    .post-form {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      border-left: 5px solid var(--complementary);
+    }
+
+    .post-form input, .post-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .post-form button {
+      background-color: var(--complementary);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+
+    .post-form button:hover {
+      background-color: var(--primary);
+    }
+
+    .leaderboard {
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      border-top: 4px solid var(--complementary);
+    }
+
+    .leaderboard h4 {
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .leaderboard ol li:first-child {
+      color: var(--complementary);
+      font-weight: bold;
+    }
+
+
+
+    .footer {
+      background-color: var(--footer-bg);
+      color: var(--white);
+      text-align: center;
+      padding: 25px 10px;
+      font-size: 0.85rem;
+      margin-top: 50px;
+    }
+    .site-footer {
+      background: linear-gradient(180deg, #0f1724 0%, #0b1220 100%);
+      color: #e6eef8;
+      padding: 48px 28px 18px;
+      margin-top: 48px;
+      font-size: 0.95rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+
+    .footer-brand .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .footer-logo svg { border-radius: 8px; }
+    .brand-name { font-weight: 600; font-size: 1.05rem; color: #fff; }
+
+    .footer-desc {
+      color: rgba(230,238,248,0.85);
+      margin-bottom: 10px;
+      line-height: 1.5;
+      max-width: 330px;
+    }
+
+    .footer-link {
+      display: inline-block;
+      color: #EDB82F;
+      margin-bottom: 18px;
+      text-decoration: none;
+    }
+
+    .socials a {
+      display: inline-block;
+      margin-right: 10px;
+      opacity: 0.95;
+      transition: transform .15s, opacity .15s;
+    }
+    .socials a:hover { transform: translateY(-3px); opacity: 1; }
+
+    .footer-nav ul,
+    .footer-join ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      line-height: 2.0;
+    }
+
+    .footer-nav a,
+    .footer-join a {
+      color: rgba(230,238,248,0.9);
+      text-decoration: none;
+      transition: color .15s;
+      font-weight: 500;
+    }
+    .footer-nav a:hover, .footer-join a:hover { color: var(--complementary); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 26px auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.86rem;
+      color: rgba(230,238,248,0.7);
+    }
+
+    .policies a {
+      color: rgba(230,238,248,0.7);
+      text-decoration: none;
+      margin: 0 6px;
+    }
+    .policies a:hover { color: var(--white); }
+    .sep { margin: 0 6px; color: rgba(230,238,248,0.3); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .footer-inner { grid-template-columns: 2fr 1fr; gap: 18px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 14px; }
+      /* .footer-desc { max-width: 100%; } */
+    }
+     @media (max-width: 550px) {
+        .footer-inner { grid-template-columns: 1fr; gap: 18px; }
+     }
+    .logo {
+  display: block;
+  height: 86px;        /* desktop size — increase from 60px */
+  max-height: 86px;
+  width: auto;
+  object-fit: contain;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-text {
+  color: var(--primary);
+  font-size: 1.20rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* responsive: smaller logo on narrow screens */
+@media (max-width: 900px) {
+  .logo {
+    height: 56px;     /* smaller on mobile */
+    max-height: 56px;
+  }
+  .brand-text { display: none; } /* hide text on small screens if needed */
+}
+  a {
+  text-decoration: none !important;   /* removes underline */
+  color: inherit ;          /* makes the link use the parent text color */
+}
+
+i[class^="fa-"], 
+i[class*=" fa-"] {
+    font-family: "Font Awesome 6 Free" !important;
+    /* font-weight: 900 !important; */
+}
+.fa-brands {
+    font-family: "Font Awesome 6 Brands" !important;
+}
+

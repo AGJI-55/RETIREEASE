@@ -1,0 +1,705 @@
+<% layout("./layout/boiler.ejs") %>
+  <style>
+    :root{
+      --site-max: 1180px;
+      --left-max: 820px;
+      --sidebar-w: 320px;
+      --accent: #354c9a;
+      --accent-2: #2e3fa3;
+      --muted: #6b6b6b;
+      --muted-2: #9aa0a6;
+      --bg: #f6f7fb;
+      --card-bg: #fff;
+      --glass: rgba(255,255,255,0.6);
+      --radius: 12px;
+      --soft-shadow: 0 8px 20px rgba(30,30,60,0.06);
+    }
+    /* reset-ish */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:linear-gradient(180deg,#f6f7fb 0%, #ffffff 100%);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* header */
+    .site-header{
+      background:#fff;
+      border-bottom:1px solid rgba(20,20,40,0.03);
+      position:sticky; top:0; z-index:60;
+      backdrop-filter: blur(4px);
+    }
+    .header-inner{
+      max-width:var(--site-max);
+      margin:0 auto;
+      padding:14px 20px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+    .site-title{font-weight:700;color:var(--accent);font-size:18px}
+    .main-nav{display:flex;align-items:center;gap:18px}
+    .main-nav a{color:#222;text-decoration:none;padding:6px 8px;border-radius:8px;font-weight:500}
+    .btn-login{border:1px solid var(--accent); padding:6px 12px;border-radius:20px}
+    .btn-signup{background:var(--accent); color:#fff; padding:8px 14px;border-radius:22px;box-shadow: 0 4px 12px rgba(53,76,154,0.12)}
+
+    /* hero */
+    .hero{
+      min-height: 500px;
+      display:flex; align-items:center;
+      position:relative;
+
+  background: url('/images/people.png') top center/cover no-repeat !important;
+}
+
+ 
+
+    .hero::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(20,20,40,0.45), rgba(20,20,40,0.55));
+    }
+    .hero-inner{
+      max-width:var(--site-max);
+      margin:0 auto;
+      width:100%;
+      padding:52px 20px;
+      position:relative; z-index:2;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; flex-direction:column;
+    }
+    .hero h1{color:#fff; font-size:36px; margin:0 0 10px; letter-spacing:0.2px}
+    .hero p{color:rgba(255,255,255,0.95); margin:0 0 20px; font-weight:500}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
+    .btn-ghost{
+      background:transparent; color:#fff; border:2px solid rgba(255,255,255,0.85);
+      padding:10px 18px; border-radius:28px; cursor:pointer; font-weight:600;
+    }
+    .btn-primary{
+      background: linear-gradient(180deg,var(--accent), var(--accent-2));
+      color:#fff; padding:10px 18px; border-radius:28px; border:0; cursor:pointer; font-weight:600;
+      box-shadow: 0 10px 30px rgba(46,63,163,0.12);
+    }
+.btn-primary:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+
+    /* main layout */
+    .page-main{
+      max-width: var(--site-max) ;
+      margin: 28px auto;
+      padding: 0 20px 60px;
+      display:grid;
+      grid-template-columns: 1fr var(--sidebar-w);
+      gap:28px;
+      align-items:start;
+    }
+
+    /* left column container (centers content under hero) */
+    .left-col{
+      max-width: var(--left-max);
+      margin: 0 auto;
+      width:100%;
+      padding: 0 12px;
+    }
+
+    /* controls */
+    .controls{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .search input{
+      /* width:420px; max-width:100%; */
+      padding:12px 14px; border-radius:10px; border:1px solid #e6e9ee;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(30,30,60,0.03);
+    }
+    .filter-row{display:flex; gap:10px; align-items:center}
+
+    select, button.small{
+      padding:8px 10px; border-radius:8px; border:1px solid #e1e4ea;
+      background:#fff; cursor:pointer;
+    }
+
+    /* groups grid */
+    .groups-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:18px;
+    }
+    .card{
+      background:var(--card-bg);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--soft-shadow);
+      border: 1px solid rgba(20,20,40,0.04);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(30,30,60,0.08) }
+
+    .group-card{text-align:center; padding:20px}
+    .group-card h3{margin:0 0 8px; font-size:18px}
+    .group-card p{color:var(--muted); font-size:14px; line-height:1.45}
+    .meta{color:var(--muted-2); margin-top:12px; font-size:13px}
+    .card-actions{margin-top:12px; display:flex; gap:8px; justify-content:center}
+    .card-actions button{padding:8px 12px;border-radius:10px;border:1px solid rgba(20,20,40,0.06);background:#fff;cursor:pointer}
+
+    /* discussions */
+    .discussions-card{
+      margin-top:20px;
+      padding:20px;
+      border-radius:12px;
+    }
+    .discussions-card h3{margin:0 0 12px}
+    .posts-list{display:flex; flex-direction:column; gap:12px}
+    .post{
+      padding:14px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#fff,#fbfcff);
+      border:1px solid rgba(20,20,40,0.04);
+      transition: box-shadow .12s ease;
+    }
+    .post:hover{ box-shadow: 0 10px 30px rgba(30,30,60,0.04) }
+    .post-meta{color:var(--muted-2); font-size:13px; margin-bottom:6px}
+    .post-actions{margin-top:8px; display:flex; gap:10px; align-items:center}
+    .like-btn{background:#fff;border:1px solid rgba(46,63,163,0.08);padding:8px 10px;border-radius:10px;cursor:pointer}
+
+    /* sidebar */
+    .sidebar .card{padding:16px; margin-bottom:16px}
+    .events-list li{margin-bottom:10px;color:var(--muted)}
+    .contributors-list li{margin-bottom:8px;color:#222}
+
+    /* empty states */
+    .empty-note{padding:18px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfcff); text-align:center; color:var(--muted-2); border:1px dashed rgba(150,150,160,0.08)}
+
+    /* modal */
+    .modal{position:fixed; inset:0; background:rgba(6,10,20,0.45); display:flex; align-items:center; justify-content:center; padding:16px; z-index:90}
+    .modal.hidden{display:none}
+    .modal-card{width:100%; max-width:720px; background: #fff; border-radius:12px; padding:20px; box-shadow: 0 18px 60px rgba(20,20,60,0.12)}
+    .modal input, .modal textarea{width:100%; padding:12px;border-radius:10px;border:1px solid #e6e9ee;margin-top:10px}
+
+    /* tiny helpers */
+    .muted{color:var(--muted)}
+    .right{text-align:right}
+
+/* 🔥 FIX: Prevent horizontal overflow on all screens */
+html, body {
+  overflow-x: hidden;
+}
+
+/* 🔥 FIX: Search input becomes flexible */
+.search input {
+  width: 80%;
+  max-width: 80%;
+}
+.search{
+  width: 100%;
+}
+.btn-ser{
+   padding:10px !important;
+   border: 2px solid var(--primary) !important;
+   color: var(--primary);
+}
+.btn-ser:hover {
+      background-color: var(--primary) !important;
+      color: var(--white) !important;
+    }
+/* 🔥 FIX: Controls stack properly on smaller screens */
+.controls {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.filter-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* 🔥 FIX: Groups grid adapts better */
+.groups-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* 🔥 FIX: Sidebar collapses sooner */
+@media (max-width: 950px){
+  .page-main {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+  .sidebar {
+    width: 100%;
+  }
+}
+
+/* 🔥 FIX: Reduce padding & hero height on mobile */
+@media (max-width: 700px){
+  .hero {
+    min-height: 350px;
+    background-size: cover;
+  }
+  .hero h1 {
+    font-size: 26px;
+    padding: 0 10px;
+  }
+  .hero p {
+    font-size: 15px;
+  }
+  .hero-inner {
+    padding: 30px 12px;
+  }
+
+  /* Reduce page spacing */
+  .page-main {
+    padding: 0 14px 50px;
+  }
+}
+
+/* 🔥 FIX: Modal width becomes safe on mobile */
+@media (max-width: 600px){
+  .modal-card {
+    width: 92% !important;
+    padding: 16px;
+  }
+}
+
+/* 🔥 FIX: Cards soften on small screens */
+@media (max-width: 500px){
+  .card {
+    padding: 14px;
+  }
+  .post {
+    padding: 14px;
+  }
+}
+
+.tab-container {
+  /* max-width: 900px; */
+  margin: 0 auto;
+  padding-top: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom:  0 !important;
+  margin-bottom: 0 !important;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: #7a7a7a;
+  padding: 6px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab-btn.active {
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  color: #000;
+  font-weight: 600;
+  border-bottom: 5px solid #000 ;
+}
+
+.tab-underline {
+  height: 2px;
+  width: 100%;
+  background: #e4e4e4;
+  position: relative;
+}
+
+.tab-underline::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 110px; /* underline width under active tab */
+  background: black;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-110px); /* Default under first tab */
+  transition: all 0.25s ease;
+}
+
+/* CONTENT SECTIONS */
+.tab-content {
+  display: none;
+  padding-top: 20px;
+  text-align: left;
+}
+
+.tab-content.show {
+  display: block;
+}
+
+.spotify-card {
+  background: #f4f4f4;                 /* Light gray Spotify card */
+  border-radius: 18px;                 /* Big rounded corners */
+  border: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spotify-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+.spotify-card img {
+  object-fit: cover;
+}
+
+.blog-card {
+    border: none;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  }
+  .blog-card img {
+    height: 350px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .blog-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+  .blog-footer {
+    color: rgb(180, 173, 173) !important;
+    font-size: 0.85rem;
+  }
+ 
+  /* Add dark gradient overlay like Spotify */
+  .card-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0));
+  }
+  .card-wrapper {
+    position: relative;
+  }
+
+@media (max-width: 550px) {
+    .dd{
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .search{
+     width: 80%;
+    }
+}
+    /* @media (max-width: 1100px){
+      .page-main{grid-template-columns: 1fr 300px; padding:0 18px}
+      .left-col{max-width:700px}
+    }
+    @media (max-width: 900px){
+      .page-main{grid-template-columns: 1fr}
+      .left-col{max-width:100%; margin:0}
+      .hero h1{font-size:28px}
+      .hero-inner{padding:36px 18px}
+    } */
+  </style>
+
+
+
+  <section class="hero" role="banner" aria-label="Community hero">
+    <div class="hero-inner">
+      <h1>Connect, share, and thrive together</h1>
+      <p>Start by creating a group or discussion — nothing is prefilled.</p>
+      <div class="hero-cta">
+        <button id="openCreateGroup" class="btn-primary">New Blog</button>
+        <button id="newPostBtn" class="btn-ghost">Start a Discussion</button>
+      </div>
+    </div>
+  </section>
+
+  <br>
+ <div class="search container m-5">
+  <center>
+<form action="/community/search" method="GET">
+  <input 
+    id="searchInput" 
+    type="text" 
+    name="q" 
+    placeholder="Search topics, groups or members..."
+  >
+  <button type="submit" class="btn btn-outline-primary btn-ser "> Search</button>
+</form>
+</center>
+ </div>
+
+<div class="container tab-container mt-4">
+
+  <!-- OPTIONS SWITCH -->
+  <div class="btn-group tabs w-100 " role="group" aria-label="Basic example">
+    <button id="showBlogsBtn" class=" tab-btn  active">Discussions</button>
+    <button id="showPostsBtn" class=" tab-btn  ">Blogs</button>
+    <!-- <div class="tab-underline"></div> -->
+  </div>
+  <hr>
+   <!-- <div class="tab-underline"></div> -->
+
+  <!-- BLOGS SECTION -->
+  <div id="blogsSection" class="content-section">
+   <div class="container w-75 my-4">
+
+  <% if (discuss && discuss.length>0) { %>
+     <% discuss.forEach(d => { %>
+  <div class="spotify-card p-4 mb-4">
+    <div class="d-flex dd gap-3">
+      
+      <!-- Avatar -->
+      <img src="images/user.jpg" class="rounded-circle me-3" width="70" height="70"/>
+
+        <div class="content-area text-start "> 
+        <!-- Title -->
+      <a href="/community/dis/<%= d._id %>" style="text-decoration: none; color: #000;">
+        <h4 class="mb-1 fw-bold">
+          <%= d.title %>
+          <!-- 2025 Wrapped – Share your stats with us -->
+        </h4>
+
+        <!-- Description -->
+        <p class="text-muted mb-2">
+          <%= d.content %>
+          <!-- It's that time of the year when we wrap things up with a look back at our favorite music,
+          podcasts, artists, genres, and trends... -->
+        </p>
+      </a>
+        <!-- Metadata -->
+        <div class="text-muted small fw-semibold">
+          <i class="bi bi-person-fill"></i><span class="text-dark fw-bold"><%= d.author %>.</span> <%= timeAgo(d.createdAt) %>
+           <!-- MattSuda  
+          • Spotify Star  
+          • 1 day ago  -->
+        </div>
+      </div>
+<% const isLiked = d.likedBy.includes(currUser? currUser._id : ''); %>
+
+      <div class="likeaa">
+      <button 
+        class="btn btn-light like-btn <%= isLiked ? 'text-danger' : '' %>" 
+        data-id="<%= d._id %>"><i class="fa-solid fa-thumbs-up fa-xl"></i>
+         <span class="like-count"><%= d.likes %></span>
+      </button>
+</div>
+    </div>
+  </div>
+  
+    <% }); %>
+     <% } else {%>
+         <div class="text-muted small">No Discussions found!.</div>
+         <% } %>
+</div>
+
+  </div>
+
+<%
+  function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now - past;
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+
+    if (seconds < 60) return "just now";
+    if (minutes < 60) return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    if (hours < 24) return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    if (days < 7) return days + " day" + (days > 1 ? "s" : "") + " ago";
+    return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+  }
+%>
+
+  <!-- POSTS SECTION -->
+  <div id="postsSection" class="content-section d-none">
+
+     <div class="row g-4">
+ <% if (blogs && blogs.length>0) { %>
+     <% blogs.forEach(b => { %>
+      <a href="/community/bl/<%= b._id %>" class="col-md-4 ">
+     <div >
+      <div class="blog-card">
+        <div class="card-wrapper">
+          <img src="/Posts/<%= b.image.filename %>" alt="">
+          <div class="card-overlay">
+            <div class="blog-title"> <%= b.title %> </div>
+            <div class="blog-footer cust-fot" style="color: grey;">  Posted: <%= timeAgo(b.createdAt) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </a>
+    <% }); %>
+    <% } else {%>
+         <div class="text-muted small">No Blogs found!.</div>
+         <% } %>
+</div> 
+
+  </div>
+
+</div>
+
+
+
+
+  <!-- Create Group Modal -->
+  <div id="createGroupModal" class="modal hidden" role="dialog" aria-modal="true">
+     <div class="modal-card">
+      <button id="closeCreateGroup" class="modal-close" aria-label="Close" style="float:right;border:none;background:none;font-size:22px;cursor:pointer">&times;</button>
+      <h3 style="margin-top:0">BLOG-</h3>
+      <form action="/community/Blog" method="post" enctype="multipart/form-data">
+              <input id="postTitle"  type="text" name="title" placeholder="Title" aria-label="Post title" required/>
+      <textarea id="Caption" name="Caption" rows="5" placeholder="Drop your CAption!!" aria-label="Post content" required></textarea>
+       <input   name="image" type="file" class="form-control"  required/>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px">
+        <button  type="submit" class="btn-primary">Post</button>
+      </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Post Modal -->
+  <div id="newPostModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModal" class="modal-close" aria-label="Close" style="float:right;border:none;background:none;font-size:22px;cursor:pointer">&times;</button>
+      <h3 style="margin-top:0">Create a discussion</h3>
+      <form action="/community/blogPost" method="post">
+      <input id="postTitle"  type="text" name="title" placeholder="Title" aria-label="Post title" required/>
+      <input id="postAuthor" type="text" name="author" placeholder="Author name (optional)" aria-label="Author name" required/>
+      <textarea id="postBody" name="Description" rows="5" placeholder="Write your post..." aria-label="Post content" required></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px">
+        <button  type="submit" class="btn-primary">Post</button>
+      </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+
+// document.querySelectorAll(".like-btn").forEach(btn => {
+//   btn.addEventListener("click", async () => {
+
+//     const id = btn.dataset.id;
+
+//     const res = await fetch(`/community/blogPost/${id}/likes`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       }
+//     });
+
+//     const data = await res.json();
+//      if (res.status === 401) {
+//       alert(data.message || "Please login first");
+//       return;
+//     }
+//     // Update like count instantly
+//     btn.querySelector(".like-count").textContent = data.likes;
+
+//     // Toggle button color
+//     if (data.liked) {
+//       btn.classList.add("text-danger");
+//     } else {
+//       btn.classList.remove("text-danger");
+//     }
+//   });
+// });
+
+
+
+
+const blogsBtn = document.getElementById("showBlogsBtn");
+const postsBtn = document.getElementById("showPostsBtn");
+
+const blogsSection = document.getElementById("blogsSection");
+const postsSection = document.getElementById("postsSection");
+
+// SHOW BLOGS
+blogsBtn.addEventListener("click", () => {
+  blogsSection.classList.remove("d-none");
+  postsSection.classList.add("d-none");
+
+  blogsBtn.classList.add("active", "btn-primary");
+  postsBtn.classList.remove("active", "btn-primary");
+  postsBtn.classList.add("btn-outline-primary");
+});
+
+// SHOW POSTS
+postsBtn.addEventListener("click", () => {
+  postsSection.classList.remove("d-none");
+  blogsSection.classList.add("d-none");
+
+  postsBtn.classList.add("active", "btn-primary");
+  blogsBtn.classList.remove("active", "btn-primary");
+  blogsBtn.classList.add("btn-outline-primary");
+});
+
+
+    const openCreateGroup = document.getElementById('openCreateGroup');
+    const createGroupModal = document.getElementById('createGroupModal');
+    const closeCreateGroup = document.getElementById('closeCreateGroup');
+ const newPostBtn = document.getElementById('newPostBtn');
+    // const openNewPost = document.getElementById('openNewPost');
+    const newPostModal = document.getElementById('newPostModal');
+    const closeModal = document.getElementById('closeModal');
+
+
+    
+  if (openCreateGroup && createGroupModal) {
+    openCreateGroup.addEventListener('click', () => {
+      createGroupModal.classList.remove('hidden');
+    });
+
+    closeCreateGroup?.addEventListener('click', () => {
+      createGroupModal.classList.add('hidden');
+    });
+  }
+    [newPostBtn].forEach(btn => {
+    if (btn && newPostModal) {
+      btn.addEventListener('click', () => {
+        newPostModal.classList.remove('hidden');
+      });
+    }
+  });
+
+  if (closeModal && newPostModal) {
+    closeModal.addEventListener('click', () => {
+      newPostModal.classList.add('hidden');
+    });
+  }
+
+  // Escape key se close
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      createGroupModal?.classList.add('hidden');
+      newPostModal?.classList.add('hidden');
+    }
+  });
+
+  // 
+  </script>

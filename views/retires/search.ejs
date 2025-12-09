@@ -1,0 +1,327 @@
+
+ <% layout("./layout/boiler.ejs") %>
+<style>
+
+.tab-container {
+  /* max-width: 900px; */
+  margin: 0 auto;
+  padding-top: 20px;
+  text-align: center;
+  position: relative;
+  min-height: 40vw !important;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom:  0 !important;
+  margin-bottom: 0 !important;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: #7a7a7a;
+  padding: 6px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab-btn.active {
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  color: #000;
+  font-weight: 600;
+  border-bottom: 5px solid #000 ;
+}
+
+.tab-underline {
+  height: 2px;
+  width: 100%;
+  background: #e4e4e4;
+  position: relative;
+}
+
+.tab-underline::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 110px; /* underline width under active tab */
+  background: black;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-110px); /* Default under first tab */
+  transition: all 0.25s ease;
+}
+
+/* CONTENT SECTIONS */
+.tab-content {
+  display: none;
+  padding-top: 20px;
+  text-align: left;
+}
+
+.tab-content.show {
+  display: block;
+}
+
+.spotify-card {
+  background: #f4f4f4;                 /* Light gray Spotify card */
+  border-radius: 18px;                 /* Big rounded corners */
+  border: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.spotify-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+.spotify-card img {
+  object-fit: cover;
+}
+
+.blog-card {
+    border: none;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  }
+  .blog-card img {
+    height: 350px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .blog-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+  .blog-footer {
+    color: rgb(180, 173, 173) !important;
+    font-size: 0.85rem;
+  }
+ 
+  /* Add dark gradient overlay like Spotify */
+  .card-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0));
+  }
+  .card-wrapper {
+    position: relative;
+  }
+  .search input{
+      /* width:420px; max-width:100%; */
+      padding:12px 14px; border-radius:10px; border:1px solid #e6e9ee;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(30,30,60,0.03);
+    }
+
+.search input {
+  width: 80%;
+  max-width: 80%;
+}
+.search{
+  width: 100%;
+}
+.btn-ser{
+   padding:10px !important;
+   border: 2px solid var(--primary) !important;
+   color: var(--primary);
+}
+.btn-ser:hover {
+      background-color: var(--primary) !important;
+      color: var(--white) !important;
+    }
+
+    
+@media (max-width: 550px) {
+    .dd{
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .search{
+     width: 80%;
+    }
+}
+
+</style>
+
+  <br>
+ <div class="search container m-5">
+  <center>
+<form action="/community/search" method="GET">
+  <input 
+    id="searchInput" 
+    type="text" 
+    name="q" 
+    placeholder="Search topics, groups or members..."
+  >
+  <button type="submit" class="btn btn-outline-primary btn-ser "> Search</button>
+</form>
+</center>
+ </div>
+
+<div class="container tab-container mt-4">
+
+  <!-- OPTIONS SWITCH -->
+  <div class="btn-group tabs w-100 " role="group" aria-label="Basic example">
+    <button id="showBlogsBtn" class=" tab-btn  active">Discussions</button>
+    <button id="showPostsBtn" class=" tab-btn  ">Blogs</button>
+    <!-- <div class="tab-underline"></div> -->
+  </div>
+  <hr>
+   <!-- <div class="tab-underline"></div> -->
+
+  <!-- BLOGS SECTION -->
+  <div id="blogsSection" class="content-section">
+   <div class="container w-75 my-4">
+
+  <% if (discuss && discuss.length>0) { %>
+     <% discuss.forEach(d => { %>
+ 
+  <div class="spotify-card p-4 mb-4">
+    <div class="d-flex dd gap-3">
+      
+      <!-- Avatar -->
+      <img src="/images/user.jpg" class="rounded-circle me-3" width="70" height="70"/>
+
+        <div class="content-area text-start "> 
+        <!-- Title -->
+         
+      <a href="/community/dis/<%= d._id %>" style="text-decoration: none; color: #000;">
+        <h4 class="mb-1 fw-bold">
+          <%= d.title %>
+          <!-- 2025 Wrapped – Share your stats with us -->
+        </h4>
+
+        <!-- Description -->
+        <p class="text-muted mb-2">
+          <%= d.content %>
+          <!-- It's that time of the year when we wrap things up with a look back at our favorite music,
+          podcasts, artists, genres, and trends... -->
+        </p>
+</a>
+        <!-- Metadata -->
+        <div class="text-muted small fw-semibold">
+          <i class="bi bi-person-fill"></i><span class="text-dark fw-bold"><%= d.author %>.</span> <%= timeAgo(d.createdAt) %>
+           <!-- MattSuda  
+          • Spotify Star  
+          • 1 day ago  -->
+        </div>
+      </div>
+<% const isLiked = d.likedBy.includes(currUser? currUser._id : ''); %>
+
+      <div class="likeaa">
+      <button 
+        class="btn btn-light like-btn <%= isLiked ? 'text-danger' : '' %>" 
+        data-id="<%= d._id %>"><i class="fa-solid fa-thumbs-up fa-xl"></i>
+         <span class="like-count"><%= d.likes %></span>
+      </button>
+</div>
+    </div>
+  </div>
+ 
+    <% }); %>
+    <% } else {%>
+         <div class="text-muted small">No Discussions found!.</div>
+         <% } %>
+</div>
+
+  </div>
+
+<%
+  function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now - past;
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+
+    if (seconds < 60) return "just now";
+    if (minutes < 60) return minutes + " minute" + (minutes > 1 ? "s" : "") + " ago";
+    if (hours < 24) return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+    if (days < 7) return days + " day" + (days > 1 ? "s" : "") + " ago";
+    return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+  }
+%>
+
+  <!-- POSTS SECTION -->
+  <div id="postsSection" class="content-section d-none">
+
+     <div class="row g-4">
+ <% if (blogs && blogs.length>0) { %>
+     <% blogs.forEach(b => { %>
+          <a href="/community/bl/<%= b._id %>" class="col-md-4 ">
+     <div >
+      <div class="blog-card">
+        <div class="card-wrapper">
+          <img src="/Posts/<%= b.image.filename %>" alt="">
+          <div class="card-overlay">
+            <div class="blog-title"> <%= b.title %> </div>
+            <div class="blog-footer cust-fot" style="color: grey;">  Posted: <%= timeAgo(b.createdAt) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</a>
+    <% }); %>
+    <% } else {%>
+         <div class="text-muted small">No Blogs found!.</div>
+         <% } %>
+</div> 
+  </div>
+
+</div>
+
+
+<script>
+
+
+
+
+
+const blogsBtn = document.getElementById("showBlogsBtn");
+const postsBtn = document.getElementById("showPostsBtn");
+
+const blogsSection = document.getElementById("blogsSection");
+const postsSection = document.getElementById("postsSection");
+
+// SHOW BLOGS
+blogsBtn.addEventListener("click", () => {
+  blogsSection.classList.remove("d-none");
+  postsSection.classList.add("d-none");
+
+  blogsBtn.classList.add("active", "btn-primary");
+  postsBtn.classList.remove("active", "btn-primary");
+  postsBtn.classList.add("btn-outline-primary");
+});
+
+// SHOW POSTS
+postsBtn.addEventListener("click", () => {
+  postsSection.classList.remove("d-none");
+  blogsSection.classList.add("d-none");
+
+  postsBtn.classList.add("active", "btn-primary");
+  blogsBtn.classList.remove("active", "btn-primary");
+  blogsBtn.classList.add("btn-outline-primary");
+});
+
+
+</script>

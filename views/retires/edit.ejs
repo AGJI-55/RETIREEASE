@@ -1,0 +1,42 @@
+   <% layout("./layout/boiler.ejs") %>
+   
+<div class="container mt-5" style="max-width:700px;">
+  <div class="card shadow-sm p-4">
+
+    <h3 class="mb-4 text-center">Edit <%= list.type === "Blog" ? 'Blog'  : 'Discussion' %></h3>
+
+    <form action="/community/<%= list.type === "Blog" ? 'bl'  : 'dis' %>/<%=list._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+
+      <!-- Title -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Title</label>
+        <input 
+          type="text" 
+          name="title" 
+          class="form-control"
+          value="<%= list.title %>"
+          required
+        >
+      </div>
+
+      <!-- Content -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Content/Caption</label>
+        <textarea 
+          name="content" 
+          class="form-control" 
+          rows="6"
+          required
+        ><%= list.type === "Blog" ? list.caption : list.content%></textarea>
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between">
+        <a href="/community/<%= list.type === "Blog" ? 'bl'  : 'dis' %>/<%=list._id %>" class="btn btn-secondary">Cancel</a>
+        <button class="btn btn-primary" type="submit">Update <%= list.type === "Blog" ? 'Blog'  : 'Discussion' %></button>
+      </div>
+
+    </form>
+  </div>
+</div>
